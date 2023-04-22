@@ -4,8 +4,6 @@ session_start();
 
 require("inc/database.php");
 
-require("inc/authenticate.php");
-
 $sql = "SELECT * FROM products WHERE is_active = 1 AND (`name` LIKE :search OR `description` LIKE :search)";
 $stmt = $pdo->prepare($sql);
 

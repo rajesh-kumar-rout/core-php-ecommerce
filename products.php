@@ -4,8 +4,6 @@ session_start();
 
 require("inc/database.php");
 
-require("inc/authenticate.php");
-
 $sql = "SELECT * FROM sliders";
 $stmt = $pdo->query($sql);
 $sliders = $stmt->fetchAll();

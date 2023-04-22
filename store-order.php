@@ -7,7 +7,7 @@ require("inc/database.php");
 require("inc/authenticate.php");
 
 $sql = "SELECT * FROM cart INNER JOIN products ON cart.product_id = products.id AND (products.stock IS NULL OR products.stock > cart.quantity) WHERE user_id = {$_SESSION["id"]}";
-$stmt = $pdo->prepare($sql);
+$stmt = $pdo->query($sql);
 $products = $stmt->fetchAll();
 
 $sql = "SELECT * FROM addresses WHERE user_id = :user_id AND id = :id LIMIT 1";
@@ -80,6 +80,9 @@ foreach ($products as $product)
         ]);
     }
 }
+
+$sql = "DELETE FROM cart WHERE user_id = {$_SESSION["id"]}";
+$pdo->query($sql);
 
 $_SESSION["success"] = "Order placed successfully. Your order id is {$order_id}";
 

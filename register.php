@@ -11,17 +11,25 @@ require("inc/un-authenticate.php");
 <html>
 <head>
     <?php require("inc/head.php") ?>
-    <title>Login</title>
+    <title>Register</title>
 </head>
 <body>
     <?php require("inc/navbar.php") ?>
 
     <?php require("inc/show-flash.php") ?>
 
-    <h2>Login</h2>
+    <h2>Register</h2>
 
-    <form action="_login.php" method="post">
+    <form action="/_register.php" method="post">
         <table>
+            <tr>
+                <td>
+                    <label for="name">Name</label>
+                </td>
+                <td>
+                    <input type="text" required maxlength="20" name="name" value="<?php echo isset($_SESSION["data"]["name"]) ? $_SESSION["data"]["name"] : "" ?>">
+                </td>
+            </tr>
             <tr>
                 <td>
                     <label for="email">Email</label>
@@ -45,8 +53,6 @@ require("inc/un-authenticate.php");
             </tr>
         </table>
     </form>
-
-    <a href="/register.php">Register</a>
 
     <?php require("inc/remove-flash.php") ?>
 </body>
