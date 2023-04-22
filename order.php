@@ -1,6 +1,6 @@
 <?php 
 
-require("db.php");
+require("admin/db.php");
 
 session_start();
 
@@ -10,10 +10,11 @@ if(!isset($_SESSION["email"]))
     die();
 }
 
-$sql = "SELECT * FROM orders WHERE id = :id LIMIT 1";
+$sql = "SELECT * FROM orders WHERE id = :id AND user_id = :user_id LIMIT 1";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([
-    "id" => $_GET["order_id"]
+    "id" => $_GET["order_id"],
+    "user_id" => $_SESSION["id"]
 ]);
 $order = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -43,11 +44,9 @@ $shipping = $stmt->fetch(PDO::FETCH_ASSOC);
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <?php require("head.php") ?>
     <title>Order Details</title>
 </head>
 <body>
-    <?php require("header.php") ?>
 
     <table>
         <thead>
@@ -134,6 +133,5 @@ $shipping = $stmt->fetch(PDO::FETCH_ASSOC);
                 </tr>
         </table>
     </form>
-
 </body>
 </html>
