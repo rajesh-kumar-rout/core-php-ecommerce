@@ -1,16 +1,18 @@
 <?php
 
-require("admin/db.php");
+session_start();
+
+require("inc/database.php");
+
+require("inc/authenticate.php");
 
 $sql = "SELECT * FROM sliders";
-$stmt = $pdo->prepare($sql);
-$stmt->execute();
-$sliders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmt = $pdo->query($sql);
+$sliders = $stmt->fetchAll();
 
 $sql = "SELECT * FROM categories";
-$stmt = $pdo->prepare($sql);
-$stmt->execute();
-$categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmt = $pdo->query($sql);
+$categories = $stmt->fetchAll();
 
 $sql = "SELECT * FROM products WHERE is_active = 1";
 
@@ -21,19 +23,20 @@ $stmt = $pdo->prepare($sql);
 if(isset($_GET["category_id"])) $stmt->execute(["category_id" => $_GET["category_id"]]);
 else $stmt->execute();
 
-$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$products = $stmt->fetchAll();
 
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php require("inc/head.php") ?>
     <title>Products</title>
 </head>
 <body>
+    <?php require("inc/navbar.php") ?>
+
+    <?php require("inc/show-flash.php") ?>
 
     <?php foreach($categories as $category): ?>
         <a href="/products.php?category_id=<?= $category["id"] ?>"><?= $category["name"] ?></a>
@@ -47,5 +50,6 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     <?php endforeach; ?>
 
+    <?php require("inc/remove-flash.php") ?>
 </body>
 </html>

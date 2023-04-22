@@ -1,14 +1,10 @@
 <?php 
 
-require("admin/db.php");
-
 session_start();
 
-if(!isset($_SESSION["email"]))
-{
-    header("Location: /admin/login.php");
-    die();
-}
+require("inc/database.php");
+
+require("inc/authenticate.php");
 
 $sql = "SELECT * FROM orders WHERE id = :id AND user_id = :user_id LIMIT 1";
 $stmt = $pdo->prepare($sql);
@@ -16,37 +12,41 @@ $stmt->execute([
     "id" => $_GET["order_id"],
     "user_id" => $_SESSION["id"]
 ]);
-$order = $stmt->fetch(PDO::FETCH_ASSOC);
+$order = $stmt->fetch();
 
 $sql = "SELECT * FROM ordered_products WHERE order_id = :order_id";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([
     "order_id" => $_GET["order_id"]
 ]);
-$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$products = $stmt->fetchAll();
 
 $sql = "SELECT * FROM payment_details WHERE order_id = :order_id LIMIT 1";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([
     "order_id" => $_GET["order_id"]
 ]);
-$payment = $stmt->fetch(PDO::FETCH_ASSOC);
+$payment = $stmt->fetch();
 
 $sql = "SELECT * FROM shipping_addresses WHERE order_id = :order_id LIMIT 1";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([
     "order_id" => $_GET["order_id"]
 ]);
-$shipping = $stmt->fetch(PDO::FETCH_ASSOC);
+$shipping = $stmt->fetch();
 
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <?php require("inc/head.php") ?>
     <title>Order Details</title>
 </head>
 <body>
+    <?php require("inc/navbar.php") ?>
+
+    <?php require("inc/show-flash.php") ?>
 
     <table>
         <thead>
@@ -133,5 +133,7 @@ $shipping = $stmt->fetch(PDO::FETCH_ASSOC);
                 </tr>
         </table>
     </form>
+
+    <?php require("inc/remove-flash.php") ?>
 </body>
 </html>

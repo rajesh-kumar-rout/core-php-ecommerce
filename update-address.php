@@ -1,14 +1,10 @@
 <?php 
 
-require("admin/db.php");
-
 session_start();
 
-if(!isset($_SESSION["email"]))
-{
-    header("Location: /admin/login.php");
-    die();
-}
+require("inc/database.php");
+
+require("inc/authenticate.php");
 
 $sql = "UPDATE addresses SET name = :name, mobile = :mobile, address_line_1 = :address_line_1, address_line_2 = :address_line_2, city = :city, state = :state, pincode = :pincode WHERE id = :id AND user_id = :user_id";
 $stmt = $pdo->prepare($sql);
@@ -24,7 +20,10 @@ $result = $stmt->execute([
     "user_id" => $_SESSION["id"],
 ]);
 
-if($result) $_SESSION["success"] = "Address updated successfully";
+if($result) 
+{
+    $_SESSION["success"] = "Address updated successfully";
+}
 else 
 {
     $_SESSION["error"] = "Sorry, An unknown error occured";

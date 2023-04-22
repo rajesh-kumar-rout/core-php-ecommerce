@@ -1,28 +1,26 @@
 <?php 
 
-require("db.php");
-
 session_start();
 
-if(!isset($_SESSION["id"]))
-{
-    header("Location: /admin/login.php");
-    die();
-}
+require("inc/database.php");
+
+require("inc/authenticate.php");
 
 ?>
 
 <html>
     <head>
-        <?php require("head.php") ?>
+        <?php require("inc/head.php") ?>
         <title>Change Password</title>
     </head>
     <body>
-        <?php require("header.php") ?>
+        <?php require("inc/navbar.php") ?>
+
+        <?php require("inc/show-flash.php") ?>
 
         <h2>Change Password</h2>
 
-        <form action="/admin/do-change-password.php" method="post">
+        <form action="/_change-password.php" method="post">
             <table>
                 <tr>
                     <td>
@@ -56,6 +54,6 @@ if(!isset($_SESSION["id"]))
             </table>
         </form>
 
-        <?php require("footer.php") ?>
+        <?php require("inc/remove-flash.php") ?>
     </body>
 </html>

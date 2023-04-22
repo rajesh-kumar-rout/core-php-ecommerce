@@ -1,11 +1,10 @@
 <?php 
 
-require("admin/db.php");
-require("functions.php");
-
 session_start();
 
-authenticate();
+require("inc/database.php");
+
+require("inc/authenticate.php");
 
 $sql = "SELECT * FROM addresses WHERE user_id = :user_id AND id = :id LIMIT 1";
 $stmt = $pdo->prepare($sql);
@@ -13,20 +12,20 @@ $stmt->execute([
     "user_id" => $_SESSION["id"],
     "id" => $_GET["address_id"],
 ]);
-$address = $stmt->fetch(PDO::FETCH_ASSOC);
+$address = $stmt->fetch();
 
 ?>
 
 <html>
     <head>
-        <?php require("header.php") ?>
+        <?php require("inc/head.php") ?>
         <title>Edit Address</title>
     </head>
 
     <body>
-        <?php require("navbar.php") ?>
+        <?php require("inc/navbar.php") ?>
 
-        <?php require("flash-alert.php") ?>
+        <?php require("inc/show-flash.php") ?>
 
         <h2>Edit Address</h2>
 
@@ -104,6 +103,6 @@ $address = $stmt->fetch(PDO::FETCH_ASSOC);
             </table>
         </form>
         
-        <?php require("remove-flash.php") ?>
+        <?php require("inc/remove-flash.php") ?>
     </body>
 </html>

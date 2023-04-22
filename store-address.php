@@ -1,14 +1,10 @@
 <?php 
 
-require("admin/db.php");
-
 session_start();
 
-if(!isset($_SESSION["email"]))
-{
-    header("Location: /admin/login.php");
-    die();
-}
+require("inc/database.php");
+
+require("inc/authenticate.php");
 
 $sql = "INSERT INTO addresses (user_id, name, mobile, address_line_1, address_line_2, city, state, pincode) VALUES (:user_id, :name, :mobile, :address_line_1, :address_line_2, :city, :state, :pincode)";
 $stmt = $pdo->prepare($sql);
@@ -23,7 +19,10 @@ $result = $stmt->execute([
     "user_id" => $_SESSION["id"],
 ]);
 
-if($result == 1) $_SESSION["success"] = "Address created successfully";
+if($result == 1) 
+{
+    $_SESSION["success"] = "Address created successfully";
+}
 else
 {
     $_SESSION["error"] = "Sorry, Something went wrong.";

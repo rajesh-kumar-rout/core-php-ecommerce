@@ -1,24 +1,23 @@
 <?php 
 
-require("admin/db.php");
-require("functions.php");
-
 session_start();
 
-authenticate();
+require("inc/database.php");
+
+require("inc/authenticate.php");
 
 ?>
 
 <html>
     <head>
-        <?php require("header.php") ?>
+        <?php require("inc/head.php") ?>
         <title>Create Address</title>
     </head>
 
     <body>
-        <?php require("navbar.php") ?>
+        <?php require("inc/navbar.php") ?>
 
-        <?php require("flash-alert.php") ?>
+        <?php require("inc/show-flash.php") ?>
 
         <h2>Create Address</h2>
 
@@ -95,6 +94,6 @@ authenticate();
             </table>
         </form>
 
-        <?php require("remove-flash.php") ?>
+        <?php require("inc/remove-flash.php") ?>
     </body>
 </html>

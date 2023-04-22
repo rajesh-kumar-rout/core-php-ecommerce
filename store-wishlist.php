@@ -1,8 +1,10 @@
 <?php
 
-require("admin/db.php");
-
 session_start();
+
+require("inc/database.php");
+
+require("inc/authenticate.php");
 
 $sql = "SELECT * FROM wishlists WHERE product_id = :product_id AND user_id = :user_id";
 $stmt = $pdo->prepare($sql);
@@ -10,7 +12,7 @@ $stmt->execute([
     "product_id" => $_POST["product_id"],
     "user_id" => $_SESSION["id"]
 ]);
-$product = $stmt->fetch(PDO::FETCH_ASSOC);
+$product = $stmt->fetch();
 
 if($product)
 {
@@ -26,13 +28,7 @@ $result = $stmt->execute([
     "user_id" => $_SESSION["id"]
 ]);
 
-if($result)
-{
-    $_SESSION["success"] = "Product added to wishlist successfully";
-}
-else 
-{
-    $_SESSION["error"] = "Sorry, An unknown error occured";
-}
+if($result) $_SESSION["success"] = "Product added to wishlist successfully";
+else $_SESSION["error"] = "Sorry, An unknown error occured";
 
 header("Location: /details.php?product_id=" . $_POST["product_id"]);

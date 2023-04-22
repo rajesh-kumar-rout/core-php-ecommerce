@@ -1,8 +1,10 @@
 <?php
 
-require("admin/db.php");
-
 session_start();
+
+require("inc/database.php");
+
+require("inc/authenticate.php");
 
 $sql = "DELETE FROM cart WHERE user_id = :user_id AND product_id = :product_id";
 $stmt = $pdo->prepare($sql);

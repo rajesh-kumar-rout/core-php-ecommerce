@@ -1,21 +1,20 @@
 <?php
 
-require("admin/db.php");
+session_start();
+
+require("inc/database.php");
 
 $sql = "SELECT * FROM sliders";
-$stmt = $pdo->prepare($sql);
-$stmt->execute();
-$sliders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmt = $pdo->query($sql);
+$sliders = $stmt->fetchAll();
 
 $sql = "SELECT * FROM categories";
-$stmt = $pdo->prepare($sql);
-$stmt->execute();
-$categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmt = $pdo->query($sql);
+$categories = $stmt->fetchAll();
 
 $sql = "SELECT * FROM products WHERE is_active = 1";
-$stmt = $pdo->prepare($sql);
-$stmt->execute();
-$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmt = $pdo->query($sql);
+$products = $stmt->fetchAll();
 
 $removed_indexes = [];
 
@@ -25,10 +24,7 @@ for ($i = 0; $i < count($categories); $i++)
 
     for ($j = 0; $j < count($products); $j++)
     {
-        if($products[$j]["category_id"] == $categories[$i]["id"])
-        {
-            array_push($categories[$i]["products"], $products[$j]);
-        }
+        if($products[$j]["category_id"] == $categories[$i]["id"]) array_push($categories[$i]["products"], $products[$j]);
     }
 
     if(count($categories[$i]["products"]) == 0) array_push($removed_indexes, $i);
@@ -36,25 +32,20 @@ for ($i = 0; $i < count($categories); $i++)
 
 $data = [];
 
-for ($i = 0; $i < count($categories); $i++)
-{
-    if(!in_array($i, $removed_indexes)) array_push($data, $categories[$i]);
-}
+for ($i = 0; $i < count($categories); $i++) if(!in_array($i, $removed_indexes)) array_push($data, $categories[$i]);
 
-// echo "<pre>";
-// print_r($data);
-// echo "</pre>";
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php require("inc/head.php") ?>
     <title>Home</title>
 </head>
 <body>
+    <?php require("inc/navbar.php") ?>
+
+    <?php require("inc/show-flash.php") ?>
 
     <?php foreach($sliders as $slider): ?>
         <img height="60px" width="60px" src="<?= $slider["image_url"] ?>" alt="">
@@ -73,5 +64,6 @@ for ($i = 0; $i < count($categories); $i++)
         </div>
     <?php endforeach; ?>
 
+    <?php require("inc/remove-flash.php") ?>
 </body>
 </html>

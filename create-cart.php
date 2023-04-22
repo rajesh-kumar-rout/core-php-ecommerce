@@ -1,15 +1,15 @@
 <?php
 
-require("admin/db.php");
-
 session_start();
+
+require("inc/database.php");
+
+require("inc/authenticate.php");
 
 $sql = "SELECT * FROM products WHERE id = :id";
 $stmt = $pdo->prepare($sql);
-$stmt->execute([
-    "id" => $_POST["product_id"]
-]);
-$product = $stmt->fetch(PDO::FETCH_ASSOC);
+$stmt->execute(["id" => $_POST["product_id"]]);
+$product = $stmt->fetch();
 
 if($product["stock"] && $product["stock"] < $_POST["quantity"])
 {
@@ -24,7 +24,7 @@ $stmt->execute([
     "product_id" => $_POST["product_id"],
     "user_id" => $_SESSION["id"]
 ]);
-$cart = $stmt->fetch(PDO::FETCH_ASSOC);
+$cart = $stmt->fetch();
 
 if($cart)
 {

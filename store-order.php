@@ -1,32 +1,26 @@
 <?php 
 
-require("admin/db.php");
-
 session_start();
 
-if(!isset($_SESSION["email"]))
-{
-    header("Location: /admin/login.php");
-    die();
-}
+require("inc/database.php");
 
-$sql = "SELECT * FROM cart INNER JOIN products ON cart.product_id = products.id AND (products.stock IS NULL OR products.stock > cart.quantity) WHERE user_id = :user_id";
+require("inc/authenticate.php");
+
+$sql = "SELECT * FROM cart INNER JOIN products ON cart.product_id = products.id AND (products.stock IS NULL OR products.stock > cart.quantity) WHERE user_id = {$_SESSION["id"]}";
 $stmt = $pdo->prepare($sql);
-$stmt->execute(["user_id" => $_SESSION["id"]]);
-$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$products = $stmt->fetchAll();
 
 $sql = "SELECT * FROM addresses WHERE user_id = :user_id AND id = :id LIMIT 1";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([
     "user_id" => $_SESSION["id"],
-    "id" => $_POST["address_id"],
+    "id" => $_POST["address_id"]
 ]);
-$address = $stmt->fetch(PDO::FETCH_ASSOC);
+$address = $stmt->fetch();
 
 $sql = "SELECT * FROM settings";
-$stmt = $pdo->prepare($sql);
-$stmt->execute();
-$setting = $stmt->fetch(PDO::FETCH_ASSOC);
+$stmt = $pdo->query($sql);
+$setting = $stmt->fetch();
 
 $product_price = 0;
 
@@ -36,12 +30,8 @@ $gst_amount = round($product_price * ($setting["gst"] / 100));
 
 $total_amount = $product_price + $setting["shipping_cost"] + $gst_amount;
 
-
-$sql = "INSERT INTO orders (status, user_id) VALUES ('Placed', :user_id)";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([
-    "user_id" => $_SESSION["id"],
-]);
+$sql = "INSERT INTO orders (status, user_id) VALUES ('Placed', {$_SESSION["id"]})";
+$pdo->query($sql);
 $order_id = $pdo->lastInsertId();
 
 $sql = "INSERT INTO shipping_addresses (name, mobile, address, order_id) VALUES (:name, :mobile, :address, :order_id)";

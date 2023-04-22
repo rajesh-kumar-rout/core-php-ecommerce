@@ -1,25 +1,21 @@
 <?php 
 
-require("admin/db.php");
-require("functions.php");
-
 session_start();
 
-authenticate();
+require("inc/database.php");
 
-$sql = "SELECT * FROM addresses WHERE user_id = :user_id";
-$stmt = $pdo->prepare($sql);
-$stmt->execute(["user_id" => $_SESSION["id"]]);
+require("inc/authenticate.php");
+
+$sql = "SELECT * FROM addresses WHERE user_id = {$_SESSION["id"]}";
+$stmt = $pdo->query($sql);
 $addresses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$sql = "SELECT * FROM cart INNER JOIN products ON cart.product_id = products.id AND (products.stock IS NULL OR products.stock > cart.quantity) WHERE user_id = :user_id";
-$stmt = $pdo->prepare($sql);
-$stmt->execute(["user_id" => $_SESSION["id"]]);
+$sql = "SELECT * FROM cart INNER JOIN products ON cart.product_id = products.id AND (products.stock IS NULL OR products.stock > cart.quantity) WHERE user_id = {$_SESSION["id"]}";
+$stmt = $pdo->query($sql);
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $sql = "SELECT * FROM settings";
-$stmt = $pdo->prepare($sql);
-$stmt->execute();
+$stmt = $pdo->query($sql);
 $setting = $stmt->fetch(PDO::FETCH_ASSOC);
 
 $product_price = 0;
@@ -34,14 +30,14 @@ $total_amount = $product_price + $setting["shipping_cost"] + $gst_amount;
 
 <html>
     <head>
-        <?php require("header.php") ?>
+        <?php require("inc/head.php") ?>
         <title>Checkout</title>
     </head>
 
     <body>
-        <?php require("navbar.php") ?>
+        <?php require("inc/navbar.php") ?>
 
-        <?php require("flash-alert.php") ?>
+        <?php require("inc/show-flash.php") ?>
 
         <form action="/store-order.php" method="post">
             <table>
@@ -87,6 +83,6 @@ $total_amount = $product_price + $setting["shipping_cost"] + $gst_amount;
             <button type="submit">Place Order</button>
         </form>
 
-        <?php require("remove-flash.php") ?>
+        <?php require("inc/remove-flash.php") ?>
     </body>
 </html>

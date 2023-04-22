@@ -1,24 +1,18 @@
 <?php 
 
-require("admin/db.php");
-
 session_start();
 
-if(!isset($_SESSION["email"]))
-{
-    header("Location: /admin/login.php");
-    die();
-}
+require("inc/database.php");
 
-$sql = "SELECT * FROM cart INNER JOIN products ON cart.product_id = products.id AND (products.stock IS NULL OR products.stock > cart.quantity) WHERE user_id = :user_id";
-$stmt = $pdo->prepare($sql);
-$stmt->execute(["user_id" => $_SESSION["id"]]);
-$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+require("inc/authenticate.php");
+
+$sql = "SELECT * FROM cart INNER JOIN products ON cart.product_id = products.id AND (products.stock IS NULL OR products.stock > cart.quantity) WHERE user_id = {$_SESSION["id"]}";
+$stmt = $pdo->query($sql);
+$products = $stmt->fetchAll();
 
 $sql = "SELECT * FROM settings";
-$stmt = $pdo->prepare($sql);
-$stmt->execute();
-$setting = $stmt->fetch(PDO::FETCH_ASSOC);
+$stmt = $pdo->query($sql);
+$setting = $stmt->fetch();
 
 $product_price = 0;
 
@@ -33,16 +27,13 @@ $total_amount = $product_price + $setting["shipping_cost"] + $gst_amount;
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <?php require("inc/head.php") ?>
     <title>Cart</title>
 </head>
 <body>
-<?php if(isset($_SESSION["success"])): ?>
-    <p><?php echo $_SESSION["success"]; ?></p>
-<?php endif; ?>
+    <?php require("inc/navbar.php") ?>
 
-<?php if(isset($_SESSION["error"])): ?>
-    <p><?php echo $_SESSION["error"]; ?></p>
-<?php endif; ?>
+    <?php require("inc/show-flash.php") ?>
 
     <table>
         <thead>
@@ -84,12 +75,7 @@ $total_amount = $product_price + $setting["shipping_cost"] + $gst_amount;
     <p>Gst Amount : <?= $gst_amount ?></p>
     <p>Shipping Cost : <?= $setting["shipping_cost"] ?></p>
     <p>Total Amount : <?= $total_amount ?></p>
-    <?php 
-    if(isset($_SESSION["data"])) unset($_SESSION["data"]) ;
 
-    if(isset($_SESSION["success"])) unset($_SESSION["success"]) ;
-
-    if(isset($_SESSION["error"])) unset($_SESSION["error"]) ;
-?>
+    <?php require("inc/remove-flash.php") ?>
 </body>
 </html>

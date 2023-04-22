@@ -1,32 +1,36 @@
 <?php
 
-require("admin/db.php");
+session_start();
+
+require("inc/database.php");
+
+require("inc/authenticate.php");
 
 $sql = "SELECT * FROM products WHERE is_active = 1 AND (`name` LIKE :search OR `description` LIKE :search)";
 $stmt = $pdo->prepare($sql);
 
 $search = isset($_GET["search"]) ? $_GET["search"] :  "";
-
 $search = "%{$search}%";
 
-$stmt->bindParam(":search", $search, PDO::PARAM_STR);
+$stmt->bindParam(":search", $search);
 $stmt->execute();
-$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$products = $stmt->fetchAll();
 
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php require("inc/head.php") ?>
     <title>Search Products</title>
 </head>
 <body>
+    <?php require("inc/navbar.php") ?>
 
-    <form action="" method="get">
-        <input type="search" value="<?= $_GET["search"] ?? "" ?>" name="search" id="search">
+    <?php require("inc/show-flash.php") ?>
+
+    <form>
+        <input type="search" value="<?= $_GET["search"] ?? "" ?>" name="search">
         <button type="submit">Search</button>
     </form>
 
@@ -38,5 +42,6 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     <?php endforeach; ?>
 
+    <?php require("inc/remove-flash.php") ?>
 </body>
 </html>

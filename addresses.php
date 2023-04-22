@@ -1,29 +1,27 @@
 <?php 
 
-require("admin/db.php");
-require("functions.php");
-
 session_start();
 
-authenticate();
+require("inc/database.php");
 
-$sql = "SELECT * FROM addresses WHERE user_id = :user_id";
-$stmt = $pdo->prepare($sql);
-$stmt->execute(["user_id" => $_SESSION["id"]]);
-$addresses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+require("inc/authenticate.php");
+
+$sql = "SELECT * FROM addresses WHERE user_id = {$_SESSION["id"]}";
+$stmt = $pdo->query($sql);
+$addresses = $stmt->fetchAll();
 
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <?php require("header.php") ?>
+    <?php require("inc/head.php") ?>
     <title>Address</title>
 </head>
 <body>
-    <?php require("navbar.php") ?>
+    <?php require("inc/navbar.php") ?>
 
-    <?php require("flash-alert.php") ?>
+    <?php require("inc/show-flash.php") ?>
 
     <a href="/create-address.php">Create</a>
 
@@ -55,6 +53,6 @@ $addresses = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </tbody>
     </table>
 
-    <?php require("remove-flash.php") ?>
+    <?php require("inc/remove-flash.php") ?>
 </body>
 </html>

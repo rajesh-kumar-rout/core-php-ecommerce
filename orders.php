@@ -1,30 +1,27 @@
 <?php 
 
-require("admin/db.php");
-
 session_start();
 
-if(!isset($_SESSION["email"]))
-{
-    header("Location: /admin/login.php");
-    die();
-}
+require("inc/database.php");
 
-$sql = "SELECT orders.*, payment_details.total_amount, (SELECT COUNT(*) FROM ordered_products WHERE ordered_products.order_id = orders.id) as total_products FROM orders INNER JOIN payment_details ON payment_details.order_id = orders.id WHERE user_id = :user_id";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([
-    "user_id" => $_SESSION["id"]
-]);
-$orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+require("inc/authenticate.php");
+
+$sql = "SELECT orders.*, payment_details.total_amount, (SELECT COUNT(*) FROM ordered_products WHERE ordered_products.order_id = orders.id) as total_products FROM orders INNER JOIN payment_details ON payment_details.order_id = orders.id WHERE user_id = {$_SESSION["id"]}";
+$stmt = $pdo->query($sql);
+$orders = $stmt->fetchAll();
 
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <?php require("inc/head.php") ?>
     <title>Orders</title>
 </head>
 <body>
+    <?php require("inc/navbar.php") ?>
+
+    <?php require("inc/show-flash.php") ?>
 
     <table>
         <thead>
@@ -52,5 +49,7 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?php endforeach ?>
         </tbody>
     </table>
+
+    <?php require("inc/remove-flash.php") ?>
 </body>
 </html>
