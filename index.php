@@ -47,23 +47,41 @@ for ($i = 0; $i < count($categories); $i++) if(!in_array($i, $removed_indexes)) 
 
     <?php require("inc/show-flash.php") ?>
 
-    <?php foreach($sliders as $slider): ?>
-        <img height="60px" width="60px" src="<?= $slider["image_url"] ?>" alt="">
-    <?php endforeach; ?>
-
-    <?php foreach($data as $item): ?>
-        <div>
-            <h2><?= $item["name"] ?></h2>
-            <?php foreach($item["products"] as $product): ?>
-                <a href="/details.php?product_id=<?= $product["id"] ?>">
-                    <img height="60px" width="60px" src="<?= $product["image_url"] ?>" alt="">
-                    <h4><?= $product["name"] ?></h4>
-                    <p><?= $product["price"] ?></p>
-                </a>
+    <div class="container my-4">
+        <div class="carousel slider">
+            <?php foreach($sliders as $slider): ?>
+                <div class="carousel inner">
+                    <div class="carousel item">
+                        <img src="<?= $slider["image_url"] ?>" class="w-100 d-block">
+                    </div>
+                </div>
+                <div class="carousel-control-prev" data-bs-slider="prev" data-bs-target=".carousel">
+                    <span class="carousel-control-prev-icon"></span>
+                </div>
+                <div class="carousel-control-next" data-bs-slider="next" data-bs-target=".carousel">
+                    <div class="carousel-control-next-icon"></div>
+                </div>
             <?php endforeach; ?>
         </div>
-    <?php endforeach; ?>
+
+        <?php foreach($data as $item): ?>
+            <div class="mt-4">
+                <h4 class="fw-bold text-primary border-bottom border-primary pb-2 mb-3"><?= $item["name"] ?></h4>
+                
+                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
+                    <?php foreach($item["products"] as $product): ?>
+                        <a class="text-dark text-center text-decoration-none" href="/details.php?product_id=<?= $product["id"] ?>">
+                            <img class="img-fluid" src="<?= $product["image_url"] ?>" alt="">
+                            <p class="fw-bold mt-2 mb-1"><?= $product["name"] ?></p>
+                            <p class="fw-bold text-primary">Rs. <?= $product["price"] ?></p>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
 
     <?php require("inc/remove-flash.php") ?>
 </body>
+
 </html>

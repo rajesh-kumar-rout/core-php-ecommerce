@@ -21,36 +21,48 @@ $user = $stmt->fetch();
     <body>
         <?php require("inc/navbar.php") ?>
 
-        <?php require("inc/show-flash.php") ?>
+        <div class="container my-4">
+            <?php require("inc/show-flash.php") ?>
 
-        <h2>Edit Account</h2>
+            <form class="card mx-auto" action="/update-account.php" method="post" style="max-width:500px">
+                <div class="card-header fw-bold text-primary">Edit Account</div>
 
-        <form action="/update-account.php" method="post">
-            <table>
-                <tr>
-                    <td>
-                        <label for="name">Name</label>
-                    </td>
-                    <td>
-                        <input type="text" required maxlength="20" name="name" value="<?php echo isset($_POST["name"]) ? $_POST["name"] : $user["name"] ?>">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="email">Email</label>
-                    </td>
-                    <td>
-                        <input type="email" required maxlength="20" name="email" value="<?php echo isset($_POST["email"]) ? $_POST["email"] : $user["email"] ?>">
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <button type="submit" name="submit">Submit</button>
-                    </td>
-                </tr>
-            </table>
-        </form>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input 
+                            type="text" 
+                            id="name"
+                            value="<?= $_SESSION["error"]["name"] ?? $user["name"] ?>"
+                            class="form-control <?= isset($_SESSION["errors"]["name"]) ? "is-invalid" : "" ?>" 
+                            name="name"
+                        >
+                        
+                        <?php if(isset($_SESSION["errors"]["name"])):  ?>
+                            <div class="invalid-feedback"><?= $_SESSION["errors"]["name"] ?></div>
+                        <?php endif; ?>
+                    </div>
 
-        <?php require("inc/show-flash.php") ?>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input 
+                            type="email" 
+                            id="email"
+                            value="<?= $_SESSION["error"]["email"] ?? $user["email"] ?>"
+                            class="form-control <?= isset($_SESSION["errors"]["email"]) ? "is-invalid" : "" ?>" 
+                            name="email"
+                        >
+                        
+                        <?php if(isset($_SESSION["errors"]["email"])):  ?>
+                            <div class="invalid-feedback"><?= $_SESSION["errors"]["email"] ?></div>
+                        <?php endif; ?>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Submit</button>
+                </div>
+            </form>
+        </div>
+
+        <?php require("inc/remove-flash.php") ?>
     </body>
 </html>

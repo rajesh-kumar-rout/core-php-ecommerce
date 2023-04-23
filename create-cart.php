@@ -11,6 +11,12 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute(["id" => $_POST["product_id"]]);
 $product = $stmt->fetch();
 
+if(!$product) 
+{
+    echo "<script>javascript:history.go(-1)</script>";
+    die();
+}
+
 if($product["stock"] && $product["stock"] < $_POST["quantity"])
 {
     $_SESSION["error"] = "We do not have " . $_POST["quantity"] . " " . $product["name"] . " to fullfill your request";

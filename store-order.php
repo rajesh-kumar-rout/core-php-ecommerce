@@ -6,17 +6,21 @@ require("inc/database.php");
 
 require("inc/authenticate.php");
 
+$sql = "SELECT * FROM addresses WHERE user_id = {$_SESSION["id"]} AND id = :id LIMIT 1";
+$stmt = $pdo->prepare($sql);
+$stmt->execute(["id" => $_POST["address_id"] ?? -1]);
+$address = $stmt->fetch();
+
 $sql = "SELECT * FROM cart INNER JOIN products ON cart.product_id = products.id AND (products.stock IS NULL OR products.stock > cart.quantity) WHERE user_id = {$_SESSION["id"]}";
 $stmt = $pdo->query($sql);
 $products = $stmt->fetchAll();
 
-$sql = "SELECT * FROM addresses WHERE user_id = :user_id AND id = :id LIMIT 1";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([
-    "user_id" => $_SESSION["id"],
-    "id" => $_POST["address_id"]
-]);
-$address = $stmt->fetch();
+if(!$address)
+{
+    $_SESSION["error"] = "Please select an address";
+    header("Location: /checkout.php");
+    die();
+}
 
 $sql = "SELECT * FROM settings";
 $stmt = $pdo->query($sql);
@@ -29,6 +33,13 @@ foreach ($products as $product) $product_price += ($product["price"] * $product[
 $gst_amount = round($product_price * ($setting["gst"] / 100));
 
 $total_amount = $product_price + $setting["shipping_cost"] + $gst_amount;
+
+if(($_SESSION["total_amount"] ?? -1) != $total_amount || ($_SESSION["total_items"] ?? -1) != count($products))
+{
+    $_SESSION["error"] = "Some products in your cart has been changed recently. Plase verify your cart before proceeding";
+    header("Location: /cart.php");
+    die();
+}
 
 $sql = "INSERT INTO orders (status, user_id) VALUES ('Placed', {$_SESSION["id"]})";
 $pdo->query($sql);
@@ -86,4 +97,4 @@ $pdo->query($sql);
 
 $_SESSION["success"] = "Order placed successfully. Your order id is {$order_id}";
 
-header("Location: /index.php");
+header("Location: /orders.php");

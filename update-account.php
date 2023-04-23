@@ -6,26 +6,42 @@ require("inc/database.php");
 
 require("inc/authenticate.php");
 
-$sql = "SELECT 1 FROM users WHERE email = :email AND id != :id LIMIT 1";
-$stmt = $pdo->prepare($sql);	
-$stmt->execute([
-    "email" => $_POST["email"],
-    "id" => $_SESSION["id"]
-]);
+// access data
+$name = trim($_POST["name"]) ?? ""; 
+$email = strtolower(trim($_POST["email"])) ?? ""; 
+$errors = [];
 
-if($stmt->fetch())
+// validate name
+if(empty($name)) $errors["name"] = "Name is required";
+else if(strlen($name) > 40) $errors["name"] = "Name must be within 40 characters";
+
+// validate email
+if(empty($email)) $errors["email"] = "Email is required";
+else if(strlen($email) > 40) $errors["email"] = "Email must be within 40 characters";
+else if(!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors["email"] = "Invalid email";
+else 
 {
-    $_SESSION["error"] = "Email already taken";
+    $sql = "SELECT * FROM users WHERE email = :email AND id != {$_SESSION["id"]} LIMIT 1";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(["email" => $_POST["email"]]);
+    if($stmt->fetch()) $errors["email"] = "Email already taken";
+}
+
+// check validation errors
+if(count($errors) > 0)
+{
+    $_SESSION["errors"] = $errors;
+    $_SESSION["data"] = $_POST;
     header("Location: /edit-account.php");
     die();
 }
 
-$sql = "UPDATE users SET name = :name, email = :email WHERE id = :id";
+// update user in db
+$sql = "UPDATE users SET name = :name, email = :email WHERE id = {$_SESSION["id"]}";
 $stmt = $pdo->prepare($sql);
 $result = $stmt->execute([
     "name" => $_POST["name"],
-    "email" => $_POST["email"],
-    "id" => $_SESSION["id"],
+    "email" => $_POST["email"]
 ]);
 
 if($result)

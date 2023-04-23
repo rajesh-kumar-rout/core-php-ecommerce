@@ -1,7 +1,7 @@
 <?php if(isset($_SESSION["success"])): ?>
-    <p><?php echo $_SESSION["success"]; ?></p>
+    <div class="alert alert-success mb-3"><?= $_SESSION["success"]; ?></div>
 <?php endif; ?>
 
 <?php if(isset($_SESSION["error"])): ?>
-    <p><?php echo $_SESSION["error"]; ?></p>
+    <div class="alert alert-danger mb-3"><?= $_SESSION["error"]; ?></div>
 <?php endif; ?>

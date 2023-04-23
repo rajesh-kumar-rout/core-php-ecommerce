@@ -33,48 +33,84 @@ $total_amount = $product_price + $setting["shipping_cost"] + $gst_amount;
 <body>
     <?php require("inc/navbar.php") ?>
 
-    <?php require("inc/show-flash.php") ?>
+    <div class="container my-4">
+        <?php require("inc/show-flash.php") ?>
 
-    <table>
-        <thead>
-            <tr>
-                <td>Product</td>
-                <td>Quantity</td>
-                <td>Action</td>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach($products as $product): ?>
-                <tr>
-                    <td>
-                        <div>
-                            <img height="60px" width="60px" src="<?= $product["image_url"] ?>" alt="">
-                            <span><?= $product["name"] ?></span>
+        <?php if(count($products) == 0): ?>
+            <div class="alert alert-warning">Your cart is empty</div>
+        <?php else: ?>
+            <div class="row g-4">
+                <div class="col-12 col-md-8">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" style="min-width: 700px">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach($products as $product): ?>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex gap-2 align-items-center">
+                                                <img class="img-fluid" height="60px" width="60px" src="<?= $product["image_url"] ?>" >
+                                                <div><?= $product["name"] ?></div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <form class="input-group" action="/create-cart.php" method="post">
+                                                <input type="hidden" name="product_id" value="<?= $product["id"] ?>">
+                                                <input type="number" class="form-control" name="quantity" value="<?= $product["quantity"] ?>">
+                                                <button type="submit" class="btn btn-outline-secondary">Update</button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form action="/delete-cart.php" method="post">
+                                                <input type="hidden" name="product_id" value="<?= $product["id"] ?>">
+                                                <button type="submit" class="btn btn-outline-secondary">Remove</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <?php endforeach ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <div class="card">
+                        <div class="card-header fw-bold text-primary">Pricing Details</div>
+                        <div class="card-body">
+                            <div class="mb-2 pb-2 d-flex justify-content-between align-items-center border-bottom">
+                                <span>Product Price</span>
+                                <span>Rs. <?= $product_price ?></span>
+                            </div>
+
+                            <div class="mb-2 pb-2 d-flex justify-content-between align-items-center border-bottom">
+                                <span>Gst (<?= $setting["gst"] ?>%)</span>
+                                <span>Rs. <?= $gst_amount ?></span>
+                            </div>
+
+                            <div class="mb-2 pb-2 d-flex justify-content-between align-items-center border-bottom">
+                                <span>Shipping Cost </span>
+                                <span>Rs. <?= $setting["shipping_cost"] ?></span>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>Total Amount </span>
+                                <span>Rs. <?= $total_amount ?></span>
+                            </div>
                         </div>
-                    </td>
-                    <td>
-                        <form action="/create-cart.php" method="post">
-                            <input type="hidden" name="product_id" value="<?= $product["id"] ?>">
-                            <input type="number" name="quantity" value="<?= $product["quantity"] ?>">
-                            <button type="submit">Update</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form action="/delete-cart.php" method="post">
-                            <input type="hidden" name="product_id" value="<?= $product["id"] ?>">
-                            <button type="submit">Remove</button>
-                        </form>
-                    </td>
-                </tr>
-            <?php endforeach ?>
-        </tbody>
-    </table>
-
-    <p>Product Price : <?= $product_price ?></p>
-    <p>Gst : <?= $setting["gst"] ?></p>
-    <p>Gst Amount : <?= $gst_amount ?></p>
-    <p>Shipping Cost : <?= $setting["shipping_cost"] ?></p>
-    <p>Total Amount : <?= $total_amount ?></p>
+                        <div class="card-footer text-end">
+                            <a href="/checkout.php" class="btn btn-primary">Checkout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
 
     <?php require("inc/remove-flash.php") ?>
 </body>

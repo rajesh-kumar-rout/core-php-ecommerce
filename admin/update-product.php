@@ -17,7 +17,7 @@ $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if(isset($_FILES["image"]) && $_FILES["image"]["size"] != 0)
 {
-    $image_url = "uploads/" . rand(100, 999999999) . $_FILES["image"]["name"];
+    $image_url = "../uploads/" . rand(100, 999999999) . $_FILES["image"]["name"];
 
     move_uploaded_file($_FILES["image"]["tmp_name"], $image_url);
 }

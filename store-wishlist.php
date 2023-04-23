@@ -6,12 +6,20 @@ require("inc/database.php");
 
 require("inc/authenticate.php");
 
-$sql = "SELECT * FROM wishlists WHERE product_id = :product_id AND user_id = :user_id";
+$sql = "SELECT * FROM products WHERE id = :product_id";
 $stmt = $pdo->prepare($sql);
-$stmt->execute([
-    "product_id" => $_POST["product_id"],
-    "user_id" => $_SESSION["id"]
-]);
+$stmt->execute(["product_id" => $_POST["product_id"] ?? -1]);
+$product = $stmt->fetch();
+
+if(!$product)
+{
+    header("Location: /");
+    die();
+}
+
+$sql = "SELECT * FROM wishlists WHERE product_id = :product_id AND user_id = {$_SESSION["id"]}";
+$stmt = $pdo->prepare($sql);
+$stmt->execute(["product_id" => $_POST["product_id"]]);
 $product = $stmt->fetch();
 
 if($product)

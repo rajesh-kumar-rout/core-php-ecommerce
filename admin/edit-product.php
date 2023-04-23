@@ -40,7 +40,7 @@ $product = $stmt->fetch(PDO::FETCH_ASSOC);
                         <label for="name">Name</label>
                     </td>
                     <td>
-                        <input type="text" required name="name" maxlength="20" value="<?= isset($_SESSION["data"]["name"]) ? $_SESSION["data"]["name"] : $product["name"]  ?>">
+                        <input type="text" name="name" value="<?= isset($_SESSION["data"]["name"]) ? $_SESSION["data"]["name"] : $product["name"]  ?>">
                     </td>
                 </tr>
 

@@ -16,37 +16,44 @@ require("inc/un-authenticate.php");
 <body>
     <?php require("inc/navbar.php") ?>
 
-    <?php require("inc/show-flash.php") ?>
+    <div class="container my-4">
+        <?php require("inc/show-flash.php") ?>
 
-    <h2>Login</h2>
+        <form class="mx-auto p-4 border" action="/_login.php" method="post" style="max-width:500px">
+            <h4 class="mb-4 text-primary fw-bold text-center">Login</h4>
 
-    <form action="_login.php" method="post">
-        <table>
-            <tr>
-                <td>
-                    <label for="email">Email</label>
-                </td>
-                <td>
-                    <input type="email" name="email" required maxlength="40" value="<?php echo isset($_SESSION["data"]["email"]) ? $_SESSION["data"]["email"] : "" ?>">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="password">Password</label>
-                </td>
-                <td>
-                    <input type="password" name="password" required minlength="6" maxlength="20">
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <button type="submit" name="submit">Submit</button>
-                </td>
-            </tr>
-        </table>
-    </form>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input 
+                    type="text" 
+                    id="email"
+                    value="<?= $_SESSION["data"]["email"] ?? "" ?>"
+                    class="form-control <?= isset($_SESSION["errors"]["email"]) ? "is-invalid" : "" ?>" 
+                    name="email"
+                >
+                
+                <?php if(isset($_SESSION["errors"]["email"])):  ?>
+                    <div class="invalid-feedback"><?= $_SESSION["errors"]["email"] ?></div>
+                <?php endif; ?>
+            </div>
 
-    <a href="/register.php">Register</a>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input 
+                    type="password" 
+                    id="password"
+                    class="form-control <?= isset($_SESSION["errors"]["password"]) ? "is-invalid" : "" ?>" 
+                    name="password"
+                >
+                
+                <?php if(isset($_SESSION["errors"]["password"])):  ?>
+                    <div class="invalid-feedback"><?= $_SESSION["errors"]["password"] ?></div>
+                <?php endif; ?>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Submit</button>
+        </form>
+    </div>
 
     <?php require("inc/remove-flash.php") ?>
 </body>

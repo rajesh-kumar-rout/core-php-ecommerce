@@ -27,18 +27,27 @@ $products = $stmt->fetchAll();
 
     <?php require("inc/show-flash.php") ?>
 
-    <form>
-        <input type="search" value="<?= $_GET["search"] ?? "" ?>" name="search">
-        <button type="submit">Search</button>
-    </form>
-
-    <?php foreach($products as $product): ?>
-        <div>
-            <img height="60px" width="60px" src="<?= $product["image_url"] ?>" alt="">
-            <h4><?= $product["name"] ?></h4>
-            <p><?= $product["price"] ?></p>
+    <div class="container my-4">
+        <div class="card mx-auto mb-4" style="max-width: 700px;">
+            <div class="card-header fw-bold text-primary">Search</div>
+            <div class="card-body">
+                <form class="input-group">
+                    <input type="search" class="form-control" value="<?= $_GET["search"] ?? "" ?>" name="search">
+                    <button type="submit" class="btn btn-outline-secondary">Search</button>
+                </form>
+            </div>
         </div>
-    <?php endforeach; ?>
+
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4">
+            <?php foreach($products as $product): ?>
+                <a class="text-dark text-center text-decoration-none" href="/details.php?product_id=<?= $product["id"] ?>">
+                    <img class="img-fluid" src="<?= $product["image_url"] ?>" alt="">
+                    <p class="fw-bold mt-2 mb-1"><?= $product["name"] ?></p>
+                    <p class="fw-bold text-primary">Rs. <?= $product["price"] ?></p>
+                </a>
+            <?php endforeach; ?>
+        </div>
+    </div>
 
     <?php require("inc/remove-flash.php") ?>
 </body>

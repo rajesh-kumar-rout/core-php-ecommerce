@@ -46,93 +46,73 @@ $shipping = $stmt->fetch();
 <body>
     <?php require("inc/navbar.php") ?>
 
-    <?php require("inc/show-flash.php") ?>
+    <div class="container my-4">
+        <?php require("inc/show-flash.php") ?>
 
-    <table>
-        <thead>
-            <tr>
-                <td>Name</td>
-                <td>Image</td>
-                <td>Price</td>
-                <td>Quantity</td>
-                <td></td>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach($products as $product): ?>
-                <tr>
-                    <td><?php echo $product["name"] ?></td>
-                    <td>
-                        <img height="60px" width="60px" src="<?= $product["image_url"] ?>" alt="">
-                    </td>
-                    <td><?php echo $product["price"] ?></td>
-                    <td><?php echo $product["quantity"] ?></td>
-                </tr>
-            <?php endforeach ?>
-        </tbody>
-    </table>
+        <div class="row g-4">
+            <div class="col-12 col-md-8">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach($products as $product): ?>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img height="60px" width="60px" src="<?= $product["image_url"] ?>" class="img-fluid">
+                                        <div><?= $product["name"] ?></div>
+                                    </div>
+                                </td>
+                                <td>Rs. <?= $product["price"] ?></td>
+                                <td><?= $product["quantity"] ?></td>
+                            </tr>
+                        <?php endforeach ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="card">
+                    <div class="card-header fw-bold text-primary">Pricing Details</div>
+                    <div class="card-body">
+                        <div class="mb-2 pb-2 d-flex justify-content-between align-items-center border-bottom">
+                            <span>Product Price</span>
+                            <span>Rs. <?= $payment["product_price"] ?></span>
+                        </div>
 
-    <h2>Payment Details</h2>
-    <table>
-        <tr>
-            <td>Total Amount</td>
-            <td><?= $payment["total_amount"] ?></td>
-        </tr>
-        <tr>
-            <td>Product Price</td>
-            <td><?= $payment["product_price"] ?></td>
-        </tr>
-        <tr>
-            <td>Shipping Cost</td>
-            <td><?= $payment["shipping_cost"] ?></td>
-        </tr>
-        <tr>
-            <td>Gst <?= $payment["gst"] ?></td>
-            <td><?= $payment["gst_amount"] ?></td>
-        </tr>
-    </table>
+                        <div class="mb-2 pb-2 d-flex justify-content-between align-items-center border-bottom">
+                            <span>Gst (<?= $payment["gst"] ?>%)</span>
+                            <span>Rs. <?= $payment["gst_amount"] ?></span>
+                        </div>
 
-    <h2>Shipping Address</h2>
-    <table>
-        <tr>
-            <td>Name</td>
-            <td><?= $shipping["name"] ?></td>
-        </tr>
-        <tr>
-            <td>Mobie</td>
-            <td><?= $shipping["mobile"] ?></td>
-        </tr>
-        <tr>
-            <td>Address</td>
-            <td><?= $shipping["address"] ?></td>
-        </tr>
-    </table>
+                        <div class="mb-2 pb-2 d-flex justify-content-between align-items-center border-bottom">
+                            <span>Shipping Cost </span>
+                            <span>Rs. <?= $payment["shipping_cost"] ?></span>
+                        </div>
 
-    <form action="/admin/update-order.php" method="post">
-        <input type="hidden" name="order_id" value="<?= $order["id"] ?>">
-        <h2>Status</h2>
-        <table>
-                <tr>
-                    <td>
-                        <label for="status">Status</label>
-                    </td>
-                    <td>
-                        <select name="status" id="status">
-                            <option <?= $order["status"] == "Placed" ? "selected" : "" ?> value="Placed">Placed</option>
-                            <option <?= $order["status"] == "Shipped" ? "selected" : "" ?> value="Shipped">Shipped</option>
-                            <option <?= $order["status"] == "Rejected" ? "selected" : "" ?> value="Rejected">Rejected</option>
-                            <option <?= $order["status"] == "Canceled" ? "selected" : "" ?> value="Canceled">Canceled</option>
-                            <option <?= $order["status"] == "Delivered" ? "selected" : "" ?> value="Delivered">Delivered</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <button type="submit">Submit</button>
-                    </td>
-                </tr>
-        </table>
-    </form>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>Total Amount </span>
+                            <span>Rs. <?= $payment["total_amount"] ?></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mt-3">
+                    <div class="card-header fw-bold text-primary">Shipping Address</div>
+
+                    <div class="card-body">
+                        <div class="mb-2 pb-2 border-bottom">Name - <?= $shipping["name"] ?></div>
+                        <div class="mb-2 pb-2 border-bottom">Mobile - <?= $shipping["mobile"] ?></div>
+                        <div>Address - <?= $shipping["address"] ?></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <?php require("inc/remove-flash.php") ?>
 </body>
