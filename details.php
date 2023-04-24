@@ -43,14 +43,54 @@ $reviews = $stmt->fetchAll();
         <div class="row g-4">
             <div class="col-12 col-md-3 col-lg-4">
                 <img class="img-fluid" src="<?= $product["image_url"] ?>">
+                <div class="row row-cols-4 g-1 mt-2">
+                    <img class="img-fluid" src="<?= $product["image_url"] ?>">
+                    <img class="img-fluid" src="<?= $product["image_url"] ?>">
+                    <img class="img-fluid" src="<?= $product["image_url"] ?>">
+                    <img class="img-fluid" src="<?= $product["image_url"] ?>">
+                    <img class="img-fluid" src="<?= $product["image_url"] ?>">
+                    <img class="img-fluid" src="<?= $product["image_url"] ?>">
+                    <img class="img-fluid" src="<?= $product["image_url"] ?>">
+                </div>
             </div>
 
             <div class="col-12 col-md-9 col-lg-8">
                 <h4 class="fw-bold"><?= $product["name"] ?></h4>
 
+                <div class="d-flex gap-3 align-items-center mt-3">
+                    <div class="d-flex gap-1 align-items-center" style="font-size:12px">
+                        <i class="fa fa-star text-warning"></i>
+                        <i class="fa fa-star text-warning"></i>
+                        <i class="fa fa-star text-warning"></i>
+                        <i class="fa fa-star" style="color:#ccc;"></i>
+                        <i class="fa fa-star" style="color:#ccc;"></i>
+                    </div>
+                    <div class="text-muted">(3,455 customer reviews)</div>
+                </div>
+
                 <p class="text-muted mt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio, aliquam?</p>
 
                 <h5 class="fw-bold text-primary mt-3">Rs. <?= $product["price"] ?></h5>
+
+                <div class="mt-3">
+                    <label for="" class="form-label">Size</label>
+                    <select name="" class="form-control form-select" style="max-width:200px" id="">
+                        <option value=""></option>
+                        <option value="">S</option>
+                        <option value="">M</option>
+                        <option value="">L</option>
+                    </select>
+                </div>
+
+                <div class="mt-3">
+                    <label for="" class="form-label">Color</label>
+                    <select name="" class="form-control form-select" style="max-width:200px" id="">
+                        <option value=""></option>
+                        <option value="">S</option>
+                        <option value="">M</option>
+                        <option value="">L</option>
+                    </select>
+                </div>
 
                 <div class="d-flex gap-3 mt-3">
                     <form action="/create-cart.php" method="post" class="input-group" style="max-width: 200px">
@@ -82,9 +122,10 @@ $reviews = $stmt->fetchAll();
             <?php foreach($related as $product): ?>
                 <a class="text-dark text-center text-decoration-none" href="/details.php?product_id=<?= $product["id"] ?>">
                     <img class="img-fluid" src="<?= $product["image_url"] ?>" alt="">
-                    <p class="fw-bold mt-2 mb-1"><?= $product["name"] ?></p>
+                    <p class="fw-semibold mt-2 mb-1"><?= $product["name"] ?></p>
                     <p class="fw-bold text-primary">Rs. <?= $product["price"] ?></p>
                 </a>
+       
             <?php endforeach; ?>
         </div>
 

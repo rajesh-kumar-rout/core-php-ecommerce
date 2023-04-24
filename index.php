@@ -64,6 +64,14 @@ for ($i = 0; $i < count($categories); $i++) if(!in_array($i, $removed_indexes)) 
             <?php endforeach; ?>
         </div>
 
+        <div class="d-flex gap-3">
+            <img height="90px" class="img-fluid" width="90px" src="http://localhost:8000/uploads/683301785f1.png" alt="">
+            <div>
+            <p class="mb-1">Adidash Men's slim fit tshirt</p>
+            <p class="fw-bold text-primary">Rs. 345</p>
+            </div>
+        </div>
+
         <?php foreach($data as $item): ?>
             <div class="mt-4">
                 <h4 class="fw-bold text-primary border-bottom border-primary pb-2 mb-3"><?= $item["name"] ?></h4>
@@ -72,7 +80,7 @@ for ($i = 0; $i < count($categories); $i++) if(!in_array($i, $removed_indexes)) 
                     <?php foreach($item["products"] as $product): ?>
                         <a class="text-dark text-center text-decoration-none" href="/details.php?product_id=<?= $product["id"] ?>">
                             <img class="img-fluid" src="<?= $product["image_url"] ?>" alt="">
-                            <p class="fw-bold mt-2 mb-1"><?= $product["name"] ?></p>
+                            <p class="fw-semibold mt-2 mb-1"><?= $product["name"] ?></p>
                             <p class="fw-bold text-primary">Rs. <?= $product["price"] ?></p>
                         </a>
                     <?php endforeach; ?>
